@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TotalControl-EE_API.props" />
+</Project>
