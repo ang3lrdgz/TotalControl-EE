@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "2KWI/Mi80TYS/JW97CelnQyp87dyi84xGu05v5+vVG/qymX0fFuFmDXziUwA6eSWu+OZkvoyNDogxX5QXcCldg==",
+  "dgSpecHash": "4FsN3JZsNXTloP5nY/Byxk6x9kTY0TA29O65aaNoNRZ4M/XEFn5MM5AkYYxo2hAYlPuldok3o/VZZLR1uWlf1A==",
   "success": true,
   "projectFilePath": "C:\\Users\\Angel\\Desktop\\TCEE\\TotalControl-EE\\TotalControl-EE_API\\TotalControl-EE_API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Angel\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\Angel\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
     "C:\\Users\\Angel\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Angel\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\Angel\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

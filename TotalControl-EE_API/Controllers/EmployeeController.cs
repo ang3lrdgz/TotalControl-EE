@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,101 +15,97 @@ namespace TotalControl_EE_API.Controllers
     {
         private readonly ILogger<EmployeeController> _logger;
         private readonly ApplicationDbContext _db;
-        public EmployeeController(ILogger<EmployeeController> logger, ApplicationDbContext db )
+        private readonly IMapper _mapper;
+        public EmployeeController(ILogger<EmployeeController> logger, ApplicationDbContext db, IMapper mapper )
         {
 
             _logger = logger;
             _db = db;
+            _mapper = mapper;
 
         }
 
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<EmployeeDTO>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetEmployees()
         {
             _logger.LogInformation("Obtener los empleados");
-            return Ok(_db.Employees.ToList());
+
+            IEnumerable<Employee> employeeList = await _db.Employees.ToListAsync();
+
+            return Ok(_mapper.Map<IEnumerable<EmployeeDTO>>(employeeList));
         }
 
         [HttpGet("id:int", Name ="GetEmployee")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<EmployeeDTO> GetEmployee(int id)
+        public async Task<ActionResult<EmployeeDTO>> GetEmployee(int id)
         {
             if (id == 0)
             {
                 _logger.LogError("Error al traer empleado con Id" + id);
                 return BadRequest();
             }
-            var employee = _db.Employees.FirstOrDefault(e => e.Id == id);
+            var employee = await _db.Employees.FirstOrDefaultAsync(e => e.Id == id);
 
             if (employee == null)
             {
                 return NotFound();
             }
-            return Ok(employee);
+            return Ok(_mapper.Map<EmployeeDTO>(employee));
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<EmployeeDTO> PostEmployee([FromBody] EmployeeDTO employeeDTO)
+        public async Task<ActionResult<EmployeeDTO>> PostEmployee([FromBody] EmployeeCreateDTO createDTO)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (_db.Employees.FirstOrDefault(e=>e.Name.ToLower() == employeeDTO.Name.ToLower() &&
-            e.LastName.ToLower() == employeeDTO.LastName.ToLower()) !=null)
+            if (await _db.Employees.FirstOrDefaultAsync(e=>e.Name.ToLower() == createDTO.Name.ToLower() &&
+            e.LastName.ToLower() == createDTO.LastName.ToLower()) !=null)
             {
                 ModelState.AddModelError("NombreExistente", "El empleado ya esiste!");
                 return BadRequest(ModelState);
 
             }
 
-            if (employeeDTO ==null)
+            if (createDTO == null)
             {
-                return BadRequest(employeeDTO);
-            }
-            if (employeeDTO.Id >0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(createDTO);
             }
 
-            Employee model = new()
-            {
-                Name = employeeDTO.Name,
-                LastName = employeeDTO.LastName,
-                Gender = employeeDTO.Gender
-            };
+            Employee model = _mapper.Map<Employee>(createDTO);
 
-            _db.Employees.Add(model);
-            _db.SaveChanges();
+            await _db.Employees.AddAsync(model);
+            await _db.SaveChangesAsync();
 
-            return CreatedAtRoute("GetEmployee", new {id= employeeDTO.Id}, employeeDTO);
+            return CreatedAtRoute("GetEmployee", new {id= model.Id}, model);
         }
 
         [HttpDelete("id:int")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
             if (id==0)
             {
                 return BadRequest();
             }
-            var employee = _db.Employees.FirstOrDefault(e=>e.Id == id);
+            var employee = await _db.Employees.FirstOrDefaultAsync(e => e.Id == id);
             if (employee==null)
             {
                 return NotFound();
             }
             _db.Employees.Remove(employee);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return NoContent();
         }
@@ -116,24 +113,17 @@ namespace TotalControl_EE_API.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateEmployee(int id, [FromBody] EmployeeDTO employeeDTO)
+        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateDTO updateDTO)
         {
-            if (employeeDTO==null || id!=employeeDTO.Id)
+            if (updateDTO == null || id!= updateDTO.Id)
             {
                 return BadRequest();
             }
 
-            Employee model = new()
-            {
-                Id = employeeDTO.Id,
-                Name = employeeDTO.Name,
-                LastName = employeeDTO.LastName,
-                Gender = employeeDTO.Gender
-
-            };
+            Employee model = _mapper.Map<Employee>(updateDTO);
 
             _db.Employees.Update(model);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return NoContent();
         }
@@ -141,21 +131,15 @@ namespace TotalControl_EE_API.Controllers
         [HttpPatch("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdatePartEmployee(int id, JsonPatchDocument<EmployeeDTO> patchDTO )
+        public async Task<IActionResult> UpdatePartEmployee(int id, JsonPatchDocument<EmployeeUpdateDTO> patchDTO )
         {
-            if (patchDTO == null || id != 0)
+            if (patchDTO == null || id == 0)
             {
                 return BadRequest();
             }
-            var employee = _db.Employees.AsNoTracking().FirstOrDefault(e => e.Id == id);
+            var employee = await _db.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
-            EmployeeDTO employeeDTO = new()
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                LastName = employee.LastName,
-                Gender = employee.Gender
-            };
+            EmployeeUpdateDTO employeeDTO = _mapper.Map<EmployeeUpdateDTO>(employee);
 
             if (employee == null) return BadRequest();
 
@@ -166,15 +150,10 @@ namespace TotalControl_EE_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            Employee model = new()
-            {
-                Id = employeeDTO.Id,
-                Name = employeeDTO.Name,
-                LastName = employeeDTO.LastName,
-                Gender = employeeDTO.Gender
-            };
+            Employee model = _mapper.Map<Employee>(employeeDTO);
+
             _db.Employees.Update(model);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return NoContent();
         }
