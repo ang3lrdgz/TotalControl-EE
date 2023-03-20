@@ -11,6 +11,7 @@ namespace TotalControl_EE_API.Data
              
         }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Register> Registers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,14 +21,17 @@ namespace TotalControl_EE_API.Data
                     Id = 1,
                     Name = "Angel",
                     LastName = "Rodriguez",
-                    Gender = "M"
+                    Gender = "M",
+                    Status = "Unmodified"
                 },
                 new Employee()
                 {
                     Id = 2,
                     Name = "Ramón",
                     LastName = "Rodriguez",
-                    Gender = "M"
+                    Gender = "M",
+                    Status = "Unmodified"
+
                 }
             );
         }

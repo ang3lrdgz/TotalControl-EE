@@ -1,6 +1,9 @@
+
 using Microsoft.EntityFrameworkCore;
 using TotalControl_EE_API;
 using TotalControl_EE_API.Data;
+using TotalControl_EE_API.Repository;
+using TotalControl_EE_API.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 });
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IRegisterRepository, RegisterRepository>();
 
 var app = builder.Build();
 

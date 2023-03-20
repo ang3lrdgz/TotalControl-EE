@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TotalControl_EE_API.Data;
 
@@ -11,9 +12,11 @@ using TotalControl_EE_API.Data;
 namespace TotalControlEEAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230320053111_AddRegistertable")]
+    partial class AddRegistertable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,9 @@ namespace TotalControlEEAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DateUpdate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -42,10 +48,6 @@ namespace TotalControlEEAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
@@ -54,18 +56,18 @@ namespace TotalControlEEAPI.Migrations
                         new
                         {
                             Id = 1,
+                            DateUpdate = new DateTime(2023, 3, 20, 2, 31, 11, 26, DateTimeKind.Local).AddTicks(5751),
                             Gender = "M",
                             LastName = "Rodriguez",
-                            Name = "Angel",
-                            Status = "Unmodified"
+                            Name = "Angel"
                         },
                         new
                         {
                             Id = 2,
+                            DateUpdate = new DateTime(2023, 3, 20, 2, 31, 11, 26, DateTimeKind.Local).AddTicks(5769),
                             Gender = "M",
                             LastName = "Rodriguez",
-                            Name = "Ramón",
-                            Status = "Unmodified"
+                            Name = "Ramón"
                         });
                 });
 

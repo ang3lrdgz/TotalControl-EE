@@ -14,5 +14,8 @@ namespace TotalControl_EE_API.Models
         public string LastName { get; set; } = string.Empty;
 
         public string Gender { get; set; } = string.Empty;
+
+        public string Status { get; set; } = string.Empty;
+
     }
 }

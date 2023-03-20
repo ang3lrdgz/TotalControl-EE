@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TotalControl_EE_API.Data;
 
@@ -11,9 +12,11 @@ using TotalControl_EE_API.Data;
 namespace TotalControlEEAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230320040410_AddDateUpdate")]
+    partial class AddDateUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,9 @@ namespace TotalControlEEAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DateUpdate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -42,10 +48,6 @@ namespace TotalControlEEAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
@@ -54,59 +56,19 @@ namespace TotalControlEEAPI.Migrations
                         new
                         {
                             Id = 1,
+                            DateUpdate = new DateTime(2023, 3, 20, 1, 4, 10, 148, DateTimeKind.Local).AddTicks(7545),
                             Gender = "M",
                             LastName = "Rodriguez",
-                            Name = "Angel",
-                            Status = "Unmodified"
+                            Name = "Angel"
                         },
                         new
                         {
                             Id = 2,
+                            DateUpdate = new DateTime(2023, 3, 20, 1, 4, 10, 148, DateTimeKind.Local).AddTicks(7566),
                             Gender = "M",
                             LastName = "Rodriguez",
-                            Name = "Ramón",
-                            Status = "Unmodified"
+                            Name = "Ramón"
                         });
-                });
-
-            modelBuilder.Entity("TotalControl_EE_API.Models.Register", b =>
-                {
-                    b.Property<int>("IdRegister")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRegister"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IdEmployee")
-                        .HasColumnType("int");
-
-                    b.Property<string>("businessLocation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("registerType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdRegister");
-
-                    b.HasIndex("IdEmployee");
-
-                    b.ToTable("Registers");
-                });
-
-            modelBuilder.Entity("TotalControl_EE_API.Models.Register", b =>
-                {
-                    b.HasOne("TotalControl_EE_API.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("IdEmployee")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,17 +13,19 @@ namespace TotalControl_EE_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class RegisterController : ControllerBase
     {
-        private readonly ILogger<EmployeeController> _logger;
+        private readonly ILogger<RegisterController> _logger;
         private readonly IEmployeeRepository _employeeRepo;
+        private readonly IRegisterRepository _registerRepo;
         private readonly IMapper _mapper;
         protected APIResponse _response;
-        public EmployeeController(ILogger<EmployeeController> logger, IEmployeeRepository employeeRepo, IMapper mapper )
+        public RegisterController(ILogger<RegisterController> logger, IEmployeeRepository employeeRepo, IRegisterRepository registerRepo, IMapper mapper )
         {
 
             _logger = logger;
             _employeeRepo = employeeRepo;
+            _registerRepo = registerRepo;
             _mapper = mapper;
             _response = new();
         }
@@ -31,15 +33,15 @@ namespace TotalControl_EE_API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetEmployees()
+        public async Task<ActionResult<APIResponse>> GetRegister()
         {
             try
             {
-                _logger.LogInformation("Obtener los empleados");
+                _logger.LogInformation("Obtener los registros");
 
-                IEnumerable<Employee> employeeList = await _employeeRepo.GetAll();
+                IEnumerable<Register> registerlist = await _registerRepo.GetAll();
 
-                _response.Result = _mapper.Map<IEnumerable<EmployeeDTO>>(employeeList);
+                _response.Result = _mapper.Map<IEnumerable<RegisterDTO>>(registerlist);
                 _response.statusCode = HttpStatusCode.OK;
 
                 return Ok(_response);
@@ -52,29 +54,29 @@ namespace TotalControl_EE_API.Controllers
             return _response;
         }
 
-        [HttpGet("id:int", Name ="GetEmployee")]
+        [HttpGet("id:int", Name ="GetRegister")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<APIResponse>> GetEmployee(int id)
+        public async Task<ActionResult<APIResponse>> GetRegister(int id)
         {
             try
             {
                 if (id == 0)
                 {
-                    _logger.LogError("Error al traer empleado con Id" + id);
+                    _logger.LogError("Error al traer registro con Id" + id);
                     _response.statusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccessful = false;
                     return BadRequest(_response);
                 }
-                var employee = await _employeeRepo.Get(e => e.Id == id);
+                var register = await _registerRepo.Get(r => r.IdRegister == id);
 
-                if (employee == null)
+                if (register == null)
                 {
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
-                _response.Result = _mapper.Map<EmployeeDTO>(employee);
+                _response.Result = _mapper.Map<RegisterDTO>(register);
                 _response.statusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -90,7 +92,7 @@ namespace TotalControl_EE_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> PostEmployee([FromBody] EmployeeCreateDTO createDTO)
+        public async Task<ActionResult<APIResponse>> PostRegister([FromBody] RegisterCreateDTO createDTO)
         {
             try
             {
@@ -99,27 +101,32 @@ namespace TotalControl_EE_API.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (await _employeeRepo.Get(e => e.Name.ToLower() == createDTO.Name.ToLower() &&
-                e.LastName.ToLower() == createDTO.LastName.ToLower()) != null)
+                if (await _registerRepo.Get(r => r.Date == createDTO.Date &&
+                r.registerType == createDTO.registerType) != null)
                 {
-                    ModelState.AddModelError("NombreExistente", "El empleado ya esiste!");
+                    ModelState.AddModelError("Registro", "El empleado ya Ingreso/Egreso!");
                     return BadRequest(ModelState);
-
                 }
+
+                if (await _employeeRepo.Get(e => e.Id==createDTO.IdEmployee) == null)
+                {
+                        ModelState.AddModelError("ClaveForanea", "El IdEmployeed no existe!");
+                        return BadRequest(ModelState);
+                }
+
 
                 if (createDTO == null)
                 {
                     return BadRequest(createDTO);
                 }
 
-                Employee model = _mapper.Map<Employee>(createDTO);
+                Register model = _mapper.Map<Register>(createDTO);
 
-                model.Status = "Unmodified";
-                await _employeeRepo.Create(model);
+                await _registerRepo.Create(model);
                 _response.Result = model;
                 _response.statusCode = HttpStatusCode.Created;
 
-                return CreatedAtRoute("GetEmployee", new { id = model.Id }, _response);
+                return CreatedAtRoute("GetRegister", new { id = model.IdRegister }, _response);
             }
             catch (Exception ex)
             {
@@ -133,7 +140,7 @@ namespace TotalControl_EE_API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteRegister(int id)
         {
             try
             {
@@ -143,15 +150,14 @@ namespace TotalControl_EE_API.Controllers
                     _response.statusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
-                var employee = await _employeeRepo.Get(e => e.Id == id);
-                if (employee == null)
+                var register = await _registerRepo.Get(r => r.IdRegister == id);
+                if (register == null)
                 {
                     _response.IsSuccessful = false;
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
-                await _employeeRepo.Remove(employee);
-
+                await _registerRepo.Remove(register);
                 _response.statusCode = HttpStatusCode.NoContent;
 
                 return Ok(_response);
@@ -168,48 +174,25 @@ namespace TotalControl_EE_API.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateDTO updateDTO)
+        public async Task<IActionResult> UpdateRegister(int id, [FromBody] RegisterUpdateDTO updateDTO)
         {
-            if (updateDTO == null || id!= updateDTO.Id)
+            if (updateDTO == null || id!= updateDTO.IdRegister)
             {
                 _response.IsSuccessful = false;
                 _response.statusCode = HttpStatusCode.BadRequest;
                 return BadRequest(_response);
             }
 
-            Employee model = _mapper.Map<Employee>(updateDTO);
-
-            await _employeeRepo.Update(model);
-            _response.statusCode = HttpStatusCode.NoContent;
-
-            return Ok(_response);
-        }
-
-        [HttpPatch("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdatePartEmployee(int id, JsonPatchDocument<EmployeeUpdateDTO> patchDTO )
-        {
-            if (patchDTO == null || id == 0)
+            if (await _employeeRepo.Get(e =>e.Id == updateDTO.IdEmployee) == null)
             {
-                return BadRequest();
-            }
-            var employee = await _employeeRepo.Get(e => e.Id == id, tracked:false);
-
-            EmployeeUpdateDTO employeeDTO = _mapper.Map<EmployeeUpdateDTO>(employee);
-
-            if (employee == null) return BadRequest();
-
-            patchDTO.ApplyTo(employeeDTO, ModelState);
-
-            if (!ModelState.IsValid)
-            {
+                ModelState.AddModelError("ClaveForanea", "El IdEmployeed no existe!");
                 return BadRequest(ModelState);
             }
 
-            Employee model = _mapper.Map<Employee>(employeeDTO);
 
-            await _employeeRepo.Update(model);
+            Register model = _mapper.Map<Register>(updateDTO);
+
+            await _registerRepo.Update(model);
             _response.statusCode = HttpStatusCode.NoContent;
 
             return Ok(_response);

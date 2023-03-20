@@ -11,6 +11,11 @@ namespace TotalControl_EE_API
             CreateMap<Employee, EmployeeDTO>().ReverseMap();
             CreateMap<Employee, EmployeeCreateDTO>().ReverseMap();
             CreateMap<Employee, EmployeeUpdateDTO>().ReverseMap();
+
+            CreateMap<Register, RegisterDTO>().ReverseMap();
+            CreateMap<Register, RegisterCreateDTO>().ReverseMap();
+            CreateMap<Register, RegisterUpdateDTO>().ReverseMap();
+
         }
     }
 }
