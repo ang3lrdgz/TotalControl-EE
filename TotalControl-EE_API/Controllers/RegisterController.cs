@@ -32,6 +32,7 @@ namespace TotalControl_EE_API.Controllers
 
 
         [HttpGet]
+        [Route("GetRegister")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetRegister()
         {
@@ -122,6 +123,7 @@ namespace TotalControl_EE_API.Controllers
 
                 Register model = _mapper.Map<Register>(createDTO);
 
+                model.Status = "Unmodified";
                 await _registerRepo.Create(model);
                 _response.Result = model;
                 _response.statusCode = HttpStatusCode.Created;
@@ -196,6 +198,45 @@ namespace TotalControl_EE_API.Controllers
             _response.statusCode = HttpStatusCode.NoContent;
 
             return Ok(_response);
+        }
+
+        [HttpGet]
+        [Route("GetEntriesAndExits")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<APIResponse>> GetEntriesAndExits(DateTime dateFrom, DateTime dateTo, string descriptionFilter, string businessLocation)
+        {
+            try
+            {
+                var employee = await _employeeRepo.Get(r => r.Name == descriptionFilter || r.LastName == descriptionFilter);
+                if (employee == null)
+                {
+                    _response.IsSuccessful = false;
+                    _response.statusCode = HttpStatusCode.NotFound;
+                    _response.ErrorMessages = new List<string>() { "El Empleado no esta registrado!" };
+                    return NotFound(_response);
+                }
+
+                _logger.LogInformation("Obtener los ingresos y egresos");
+
+                var entries = await _registerRepo.Count(r => r.Date >= dateFrom && r.Date <= dateTo && r.registerType == "ingreso" && r.businessLocation == businessLocation && (r.Employee.Name.Contains(descriptionFilter) || r.Employee.LastName.Contains(descriptionFilter)));
+
+                var exits = await _registerRepo.Count(r => r.Date >= dateFrom && r.Date <= dateTo && r.registerType == "egreso" && r.businessLocation == businessLocation && (r.Employee.Name.Contains(descriptionFilter) || r.Employee.LastName.Contains(descriptionFilter)));
+
+                var result = new { Ingresos = entries, Egresos = exits };
+
+                _response.Result = result;
+                _response.statusCode = HttpStatusCode.OK;
+
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccessful = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return _response;
         }
 
     }

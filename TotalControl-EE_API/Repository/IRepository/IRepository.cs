@@ -7,6 +7,7 @@ namespace TotalControl_EE_API.Repository.IRepository
         Task Create(T entity);
 
         Task<List<T>> GetAll(Expression<Func<T, bool>>? filter=null);
+        Task<int> Count(Expression<Func<T, bool>>? filter = null);
 
         Task<T> Get(Expression<Func<T, bool>>? filter = null, bool tracked=true);
 
@@ -14,4 +15,5 @@ namespace TotalControl_EE_API.Repository.IRepository
 
         Task Record();
     }
+
 }

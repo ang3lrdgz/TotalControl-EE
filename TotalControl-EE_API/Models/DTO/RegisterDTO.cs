@@ -15,5 +15,8 @@ namespace TotalControl_EE_API.Models.DTO
         public string registerType { get; set; } = string.Empty;
 
         public string businessLocation { get; set; } = string.Empty;
+
+        public string Status { get; set; } = string.Empty;
+
     }
 }

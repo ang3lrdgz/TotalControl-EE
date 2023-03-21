@@ -1,4 +1,6 @@
-﻿using TotalControl_EE_API.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using TotalControl_EE_API.Data;
 using TotalControl_EE_API.Models;
 using TotalControl_EE_API.Repository.IRepository;
 
@@ -15,11 +17,22 @@ namespace TotalControl_EE_API.Repository
         }
 
         public async Task<Register> Update(Register entity)
-        {   
-            entity.Date = DateTime.Now;
+        {
+            entity.Status = "Modified";
             _db.Registers.Update(entity);
             await _db.SaveChangesAsync();
             return entity;
+        }
+        public Task<int> Count(Expression<Func<Register, bool>>? filter = null)
+        {
+            var query = _db.Registers.AsQueryable();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return query.CountAsync();
         }
     }
 }

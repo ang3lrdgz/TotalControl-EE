@@ -59,5 +59,17 @@ namespace TotalControl_EE_API.Repository
             dbSet.Remove(entity);
             await Record();
         }
+
+        public async Task<int> Count(Expression<Func<T, bool>> filter = null)
+        {
+            var query = _db.Set<T>().AsQueryable();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.CountAsync();
+        }
     }
 }
