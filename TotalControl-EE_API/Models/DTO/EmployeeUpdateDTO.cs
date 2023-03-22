@@ -2,6 +2,8 @@
 
 namespace TotalControl_EE_API.Models.Dto
 {
+    //This class is used to send registers update data through the TotalControl_EE API.
+
     public class EmployeeUpdateDto
     {
         [Required]

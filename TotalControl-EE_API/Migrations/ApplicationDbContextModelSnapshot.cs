@@ -66,6 +66,22 @@ namespace TotalControlEEAPI.Migrations
                             LastName = "Rodriguez",
                             Name = "Ramón",
                             Status = "Unmodified"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Gender = "F",
+                            LastName = "Martinez",
+                            Name = "Luisa",
+                            Status = "Unmodified"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Gender = "F",
+                            LastName = "Alvarado",
+                            Name = "Rosa",
+                            Status = "Unmodified"
                         });
                 });
 
@@ -77,21 +93,21 @@ namespace TotalControlEEAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRegister"));
 
+                    b.Property<string>("BusinessLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IdEmployee")
                         .HasColumnType("int");
 
+                    b.Property<string>("RegisterType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("businessLocation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("registerType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -2,6 +2,10 @@
 
 namespace TotalControl_EE_API.Repository.IRepository
 {
+    /*This interface is used as a template to define the basic functionality 
+     * of a mixed entity repository, which can be implemented specifically for 
+     * each entity that is managed in the application.*/
+
     public interface IRepository<T> where T : class
     {
         Task Create(T entity);

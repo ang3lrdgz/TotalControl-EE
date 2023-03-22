@@ -2,6 +2,8 @@
 
 namespace TotalControl_EE_API.Models.Dto
 {
+    //This class is used to send registers update data through the TotalControl_EE API.
+
     public class RegisterUpdateDto
     {
         [Required]
@@ -11,9 +13,9 @@ namespace TotalControl_EE_API.Models.Dto
 
         public DateTime Date { get; set; }
 
-        public string registerType { get; set; } = string.Empty;
+        public string RegisterType { get; set; } = string.Empty;
 
-        public string businessLocation { get; set; } = string.Empty;
+        public string BusinessLocation { get; set; } = string.Empty;
 
     }
 }

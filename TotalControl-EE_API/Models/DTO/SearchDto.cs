@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace TotalControl_EE_API.Models.Dto
 {
+    /*This code defines the SearchDto class, which is a Data Transfer Object (DTO) 
+     * used to search for entries and exits within a specified date, a filter and BusinessLocation.*/
+
     public class SearchDto
     {
-        public int EmployeeId { get; set; }
-        public string EmployeeName { get; set; }
-        public string EmployeeLastName { get; set; }
-        public string Gender { get; set; }
-        public string Status { get; set; }
-        public DateTime RegisterDate { get; set; }
-        public string RegisterType { get; set; }
+
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public string DescriptionFilter { get; set; }
         public string BusinessLocation { get; set; }
+
     }
 
 }

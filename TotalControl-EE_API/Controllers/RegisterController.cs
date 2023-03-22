@@ -1,25 +1,28 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿// Import required namespaces
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
-using TotalControl_EE_API.Data;
 using TotalControl_EE_API.Models;
 using TotalControl_EE_API.Models.Dto;
 using TotalControl_EE_API.Repository.IRepository;
 
+// Declare the controller namespace
 namespace TotalControl_EE_API.Controllers
 {
+    // Base path of the controller and that it is an API controller
     [Route("api/[controller]")]
     [ApiController]
     public class RegisterController : ControllerBase
     {
+        // Fields of the class
         private readonly ILogger<RegisterController> _logger;
         private readonly IEmployeeRepository _employeeRepo;
         private readonly IRegisterRepository _registerRepo;
         private readonly IMapper _mapper;
         protected APIResponse _response;
+        
+        // Constructor of the class, which takes arguments and assigns them to the corresponding fields
         public RegisterController(ILogger<RegisterController> logger, IEmployeeRepository employeeRepo, IRegisterRepository registerRepo, IMapper mapper )
         {
 
@@ -30,20 +33,26 @@ namespace TotalControl_EE_API.Controllers
             _response = new();
         }
 
-
+        // Action method that is called when an HTTP GET request is made to the api/Search route
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetRegister()
         {
             try
             {
-                _logger.LogInformation("Obtener los registros");
+                // Record input and output information to the registry
+                _logger.LogInformation("Gettings the logs");
 
+                /*The GetAll() method of the _registerRepo object is called to get all
+                 *the available records, and they are stored in a list called registerlist.*/
                 IEnumerable<Register> registerlist = await _registerRepo.GetAll();
 
+                /*A _mapper object is used to convert each item in the registerlist to a
+                 *RegisterDto object and they are stored in a list called _response.Result.*/
                 _response.Result = _mapper.Map<IEnumerable<RegisterDto>>(registerlist);
                 _response.statusCode = HttpStatusCode.OK;
 
+                //The statusCode property of _response is updated with the HttpStatusCode.OK status code.
                 return Ok(_response);
             }
             catch (Exception ex)
@@ -51,42 +60,65 @@ namespace TotalControl_EE_API.Controllers
                 _response.IsSuccessful = false;
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
+            //Finally, an OkObjectResult object is returned with the updated _response object as its value.
             return _response;
         }
 
+
+        /*The first line specifies the route of the HTTP request using 
+         * the HttpGet attribute and a route template that expects an int parameter named "id".*/
         [HttpGet("id:int", Name ="GetRegister")]
+        //The ProducesResponseType attribute specifies the HTTP status codes that can be returned by the method.
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        //This method is asynchronous and returns an ActionResult object that encapsulates an APIResponse object.
         public async Task<ActionResult<APIResponse>> GetRegister(int id)
         {
+            //A try-catch block is started to handle exceptions.
             try
             {
+                //It is checked if the id is equal to zero and a BadRequest error is returned if so.
                 if (id == 0)
                 {
+                    /*An error message is logged in the log file, and the HTTP status code 
+                     * and the IsSuccessful property are set on the _response object.*/
                     _logger.LogError("Error al traer registro con Id" + id);
                     _response.statusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccessful = false;
                     return BadRequest(_response);
                 }
+                //The record corresponding to the id is obtained using the Get method of the record repository.
                 var register = await _registerRepo.Get(r => r.IdRegister == id);
 
+                //If the record is null, the HTTP status code is set and a NotFound response is returned.
                 if (register == null)
                 {
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
+                /*If the record is found, it is mapped to the RegisterDto object
+                 *using AutoMapper and the Result property of the _response object is set.*/
                 _response.Result = _mapper.Map<RegisterDto>(register);
                 _response.statusCode = HttpStatusCode.OK;
+                //The HTTP status code is set and an Ok response is returned with the object
                 return Ok(_response);
             }
+            // Handle any exceptions that may occur and set the IsSuccessful property to false
             catch (Exception ex)
             {
                 _response.IsSuccessful = false;
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
+            // Return the response
             return _response;
         }
+
+
+        /*This attribute is used to mark a controller action method that should be used to process a
+         * POST request. The method can then retrieve any data sent in the request body or 
+         * headers, process the data as needed, and return a response to the client.*/
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -102,7 +134,7 @@ namespace TotalControl_EE_API.Controllers
                 }
 
                 if (await _registerRepo.Get(r => r.Date == createDto.Date &&
-                r.registerType == createDto.registerType) != null)
+                r.RegisterType == createDto.RegisterType) != null)
                 {
                     ModelState.AddModelError("Registro", "El empleado ya Ingreso/Egreso!");
                     return BadRequest(ModelState);
@@ -136,6 +168,13 @@ namespace TotalControl_EE_API.Controllers
             }
             return _response;
         }
+
+
+        /*This attribute is used to mark a controller action method that should be used to
+         * process a DELETE request for a specific resource identified by the integer id. 
+         * 
+         * The method can then use the id parameter to perform the appropriate logic to 
+         * delete the resource from the database.*/
 
         [HttpDelete("id:int")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -172,6 +211,11 @@ namespace TotalControl_EE_API.Controllers
             return BadRequest(_response);
         }
 
+        /*This attribute is used to mark a controller action method that should be 
+         * used to process a PUT request for a specific resource identified by the integer id.
+         * The method can then use the id parameter to perform the appropriate logic to update 
+         * the resource in the database.*/
+
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -199,5 +243,34 @@ namespace TotalControl_EE_API.Controllers
             return Ok(_response);
         }
 
+        [HttpPatch("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdatePartRegister(int id, JsonPatchDocument<RegisterUpdateDto> patchDto)
+        {
+            if (patchDto == null || id == 0)
+            {
+                return BadRequest();
+            }
+            var register = await _registerRepo.Get(r => r.IdRegister == id, tracked: false);
+
+            RegisterUpdateDto registerDto = _mapper.Map<RegisterUpdateDto>(register);
+
+            if (register == null) return BadRequest();
+
+            patchDto.ApplyTo(registerDto, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Register model = _mapper.Map<Register>(registerDto);
+
+            await _registerRepo.Update(model);
+            _response.statusCode = HttpStatusCode.NoContent;
+
+            return Ok(_response);
+        }
     }
 }

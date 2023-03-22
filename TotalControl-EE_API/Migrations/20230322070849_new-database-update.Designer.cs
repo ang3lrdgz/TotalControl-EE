@@ -12,8 +12,8 @@ using TotalControl_EE_API.Data;
 namespace TotalControlEEAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230320053111_AddRegistertable")]
-    partial class AddRegistertable
+    [Migration("20230322070849_new-database-update")]
+    partial class newdatabaseupdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,6 @@ namespace TotalControlEEAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateUpdate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -48,6 +45,10 @@ namespace TotalControlEEAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
@@ -56,18 +57,34 @@ namespace TotalControlEEAPI.Migrations
                         new
                         {
                             Id = 1,
-                            DateUpdate = new DateTime(2023, 3, 20, 2, 31, 11, 26, DateTimeKind.Local).AddTicks(5751),
                             Gender = "M",
                             LastName = "Rodriguez",
-                            Name = "Angel"
+                            Name = "Angel",
+                            Status = "Unmodified"
                         },
                         new
                         {
                             Id = 2,
-                            DateUpdate = new DateTime(2023, 3, 20, 2, 31, 11, 26, DateTimeKind.Local).AddTicks(5769),
                             Gender = "M",
                             LastName = "Rodriguez",
-                            Name = "Ramón"
+                            Name = "Ramón",
+                            Status = "Unmodified"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Gender = "F",
+                            LastName = "Martinez",
+                            Name = "Luisa",
+                            Status = "Unmodified"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Gender = "F",
+                            LastName = "Alvarado",
+                            Name = "Rosa",
+                            Status = "Unmodified"
                         });
                 });
 
@@ -79,17 +96,21 @@ namespace TotalControlEEAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRegister"));
 
+                    b.Property<string>("BusinessLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IdEmployee")
                         .HasColumnType("int");
 
-                    b.Property<string>("businessLocation")
+                    b.Property<string>("RegisterType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("registerType")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
