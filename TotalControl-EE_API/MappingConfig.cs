@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using TotalControl_EE_API.Models;
-using TotalControl_EE_API.Models.DTO;
+using TotalControl_EE_API.Models.Dto;
 
 namespace TotalControl_EE_API
 {
@@ -8,13 +8,20 @@ namespace TotalControl_EE_API
     {
         public MappingConfig()
         {
-            CreateMap<Employee, EmployeeDTO>().ReverseMap();
-            CreateMap<Employee, EmployeeCreateDTO>().ReverseMap();
-            CreateMap<Employee, EmployeeUpdateDTO>().ReverseMap();
+            CreateMap<Employee, EmployeeDto>().ReverseMap();
+            CreateMap<EmployeeDto, Employee>().ReverseMap();
 
-            CreateMap<Register, RegisterDTO>().ReverseMap();
-            CreateMap<Register, RegisterCreateDTO>().ReverseMap();
-            CreateMap<Register, RegisterUpdateDTO>().ReverseMap();
+            CreateMap<Employee, EmployeeCreateDto>().ReverseMap();
+            CreateMap<Employee, EmployeeUpdateDto>().ReverseMap();
+
+            CreateMap<Register, RegisterDto>().ReverseMap();
+            CreateMap<Register, RegisterCreateDto>().ReverseMap();
+            CreateMap<Register, RegisterUpdateDto>().ReverseMap();
+
+            CreateMap<Register, SearchDto>().ReverseMap();
+            CreateMap<Employee, SearchDto>().ReverseMap();
+
+
 
         }
     }

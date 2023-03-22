@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using TotalControl_EE_API.Data;
 using TotalControl_EE_API.Models;
-using TotalControl_EE_API.Models.DTO;
+using TotalControl_EE_API.Models.Dto;
 using TotalControl_EE_API.Repository.IRepository;
 
 namespace TotalControl_EE_API.Controllers
@@ -39,7 +39,7 @@ namespace TotalControl_EE_API.Controllers
 
                 IEnumerable<Employee> employeeList = await _employeeRepo.GetAll();
 
-                _response.Result = _mapper.Map<IEnumerable<EmployeeDTO>>(employeeList);
+                _response.Result = _mapper.Map<IEnumerable<EmployeeDto>>(employeeList);
                 _response.statusCode = HttpStatusCode.OK;
 
                 return Ok(_response);
@@ -74,7 +74,7 @@ namespace TotalControl_EE_API.Controllers
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
-                _response.Result = _mapper.Map<EmployeeDTO>(employee);
+                _response.Result = _mapper.Map<EmployeeDto>(employee);
                 _response.statusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -90,7 +90,7 @@ namespace TotalControl_EE_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> PostEmployee([FromBody] EmployeeCreateDTO createDTO)
+        public async Task<ActionResult<APIResponse>> PostEmployee([FromBody] EmployeeCreateDto createDto)
         {
             try
             {
@@ -99,20 +99,20 @@ namespace TotalControl_EE_API.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (await _employeeRepo.Get(e => e.Name.ToLower() == createDTO.Name.ToLower() &&
-                e.LastName.ToLower() == createDTO.LastName.ToLower()) != null)
+                if (await _employeeRepo.Get(e => e.Name.ToLower() == createDto.Name.ToLower() &&
+                e.LastName.ToLower() == createDto.LastName.ToLower()) != null)
                 {
                     ModelState.AddModelError("NombreExistente", "El empleado ya esiste!");
                     return BadRequest(ModelState);
 
                 }
 
-                if (createDTO == null)
+                if (createDto == null)
                 {
-                    return BadRequest(createDTO);
+                    return BadRequest(createDto);
                 }
 
-                Employee model = _mapper.Map<Employee>(createDTO);
+                Employee model = _mapper.Map<Employee>(createDto);
 
                 model.Status = "Unmodified";
                 await _employeeRepo.Create(model);
@@ -168,16 +168,16 @@ namespace TotalControl_EE_API.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateDTO updateDTO)
+        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateDto updateDto)
         {
-            if (updateDTO == null || id!= updateDTO.Id)
+            if (updateDto == null || id!= updateDto.Id)
             {
                 _response.IsSuccessful = false;
                 _response.statusCode = HttpStatusCode.BadRequest;
                 return BadRequest(_response);
             }
 
-            Employee model = _mapper.Map<Employee>(updateDTO);
+            Employee model = _mapper.Map<Employee>(updateDto);
 
             await _employeeRepo.Update(model);
             _response.statusCode = HttpStatusCode.NoContent;
@@ -188,26 +188,26 @@ namespace TotalControl_EE_API.Controllers
         [HttpPatch("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdatePartEmployee(int id, JsonPatchDocument<EmployeeUpdateDTO> patchDTO )
+        public async Task<IActionResult> UpdatePartEmployee(int id, JsonPatchDocument<EmployeeUpdateDto> patchDto )
         {
-            if (patchDTO == null || id == 0)
+            if (patchDto == null || id == 0)
             {
                 return BadRequest();
             }
             var employee = await _employeeRepo.Get(e => e.Id == id, tracked:false);
 
-            EmployeeUpdateDTO employeeDTO = _mapper.Map<EmployeeUpdateDTO>(employee);
+            EmployeeUpdateDto employeeDto = _mapper.Map<EmployeeUpdateDto>(employee);
 
             if (employee == null) return BadRequest();
 
-            patchDTO.ApplyTo(employeeDTO, ModelState);
+            patchDto.ApplyTo(employeeDto, ModelState);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Employee model = _mapper.Map<Employee>(employeeDTO);
+            Employee model = _mapper.Map<Employee>(employeeDto);
 
             await _employeeRepo.Update(model);
             _response.statusCode = HttpStatusCode.NoContent;

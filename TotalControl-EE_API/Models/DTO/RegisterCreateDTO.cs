@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TotalControl_EE_API.Models.DTO
+namespace TotalControl_EE_API.Models.Dto
 {
-    public class RegisterCreateDTO
+    public class RegisterCreateDto
     {
         [Required]
         public int IdRegister { get; set; }

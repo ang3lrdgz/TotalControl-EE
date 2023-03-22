@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TotalControl_EE_API.Models.DTO
+namespace TotalControl_EE_API.Models.Dto
 {
-    public class EmployeeUpdateDTO
+    public class EmployeeUpdateDto
     {
         [Required]
         public int Id { get; set; }
