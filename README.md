@@ -1,5 +1,5 @@
 # TotalControl-EE
-Proyect Total Control of Entry and Exit of the personal
+Proyect Total Control of Entries and Exits of the personal
 
 ------------------------------------------------------------ENGLISH----------------------------------------------------------------------
 This REST API is an ASP.NET Core application in .NET 7, it has four services that are responsible for performing different tasks, it provides endpoints to access resources related to employees and employee sign-in and sign-out records.
