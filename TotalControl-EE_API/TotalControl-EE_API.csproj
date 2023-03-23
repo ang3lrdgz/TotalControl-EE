@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>TotalControl_EE_API</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>C:\Users\Angel\Desktop\TCEE\TotalControl-EE_API\TotalControl-EE_API.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

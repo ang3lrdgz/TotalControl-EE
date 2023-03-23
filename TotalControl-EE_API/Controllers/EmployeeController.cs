@@ -10,7 +10,10 @@ using TotalControl_EE_API.Repository.IRepository;
 // Declare the controller namespace
 namespace TotalControl_EE_API.Controllers
 {
-    // Base path of the controller and that it is an API controller
+    /// <summary>
+    /// Services to Create, Read, Update or Delete employees
+    /// of products
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
@@ -32,7 +35,11 @@ namespace TotalControl_EE_API.Controllers
         }
 
 
-        // Action method that is called when an HTTP GET request is made to the api/Search route
+        /// <summary>
+        /// Get all registered employees
+        /// </summary>
+        /// <returns>All employees </returns>
+        // GET: api/Employee
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetEmployees()
@@ -63,8 +70,12 @@ namespace TotalControl_EE_API.Controllers
             return _response;
         }
 
-        /*The first line specifies the route of the HTTP request using 
-         * the HttpGet attribute and a route template that expects an int parameter named "id".*/
+        /// <summary>
+        /// Get an employee according to their Id
+        /// </summary>
+        /// <returns>Employee data</returns>
+        /// <param name="id">Employee ID</param>
+        // GET: api/Employee
         [HttpGet("id:int", Name ="GetEmployee")]
         //The ProducesResponseType attribute specifies the HTTP status codes that can be returned by the method.
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -112,10 +123,11 @@ namespace TotalControl_EE_API.Controllers
             return _response;
         }
 
-        /*This attribute is used to mark a controller action method that should be used to process a
-         * POST request. The method can then retrieve any data sent in the request body or 
-         * headers, process the data as needed, and return a response to the client.*/
-
+        /// <summary>
+        /// Allows to register a new employee
+        /// </summary>
+        /// <returns>The data of the added employee</returns>
+        // POST: api/Employee
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -159,12 +171,12 @@ namespace TotalControl_EE_API.Controllers
             return _response;
         }
 
-        /*This attribute is used to mark a controller action method that should be used to
-         * process a DELETE request for a specific resource identified by the integer id. 
-         * 
-         * The method can then use the id parameter to perform the appropriate logic to 
-         * delete the resource from the database.*/
 
+        /// <summary>
+        /// Allows you to delete an employee
+        /// </summary>
+        /// <param name="id">Id of the employee to delete</param>
+        // DELETE: api/Employee
         [HttpDelete("id:int")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -201,11 +213,12 @@ namespace TotalControl_EE_API.Controllers
             return BadRequest(_response);
         }
 
-        /*This attribute is used to mark a controller action method that should be 
-         * used to process a PUT request for a specific resource identified by the integer id.
-         * The method can then use the id parameter to perform the appropriate logic to update 
-         * the resource in the database.*/
-
+        /// <summary>
+        /// Modify an employee
+        /// </summary>
+        /// <returns>No Content if modified successfully</returns>
+        /// <param name="id">Id of the employee to Modify</param>
+        // PUT: api/Employee
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

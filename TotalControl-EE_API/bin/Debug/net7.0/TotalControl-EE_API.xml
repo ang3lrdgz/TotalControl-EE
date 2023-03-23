@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TotalControl-EE_API</name>
+    </assembly>
+    <members>
+        <member name="T:TotalControl_EE_API.Controllers.AverageController">
+            <summary>
+            Service to Read registers
+            of products
+            </summary>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.AverageController.Search(System.DateTime,System.DateTime)">
+            <summary>
+            Get an average Register according to their dateFrom and dateTo
+            </summary>
+            <returns>Register data</returns>
+            <param name="dateFrom">Register date</param>
+            <param name="dateTo">Register date</param>
+        </member>
+        <member name="T:TotalControl_EE_API.Controllers.EmployeeController">
+            <summary>
+            Services to Create, Read, Update or Delete employees
+            of products
+            </summary>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.EmployeeController.GetEmployees">
+            <summary>
+            Get all registered employees
+            </summary>
+            <returns>All employees </returns>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.EmployeeController.GetEmployee(System.Int32)">
+            <summary>
+            Get an employee according to their Id
+            </summary>
+            <returns>Employee data</returns>
+            <param name="id">Employee ID</param>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.EmployeeController.PostEmployee(TotalControl_EE_API.Models.Dto.EmployeeCreateDto)">
+            <summary>
+            Allows to register a new employee
+            </summary>
+            <returns>The data of the added employee</returns>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.EmployeeController.DeleteEmployee(System.Int32)">
+            <summary>
+            Allows you to delete an employee
+            </summary>
+            <param name="id">Id of the employee to delete</param>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.EmployeeController.UpdateEmployee(System.Int32,TotalControl_EE_API.Models.Dto.EmployeeUpdateDto)">
+            <summary>
+            Modify an employee
+            </summary>
+            <returns>No Content if modified successfully</returns>
+            <param name="id">Id of the employee to Modify</param>
+        </member>
+        <member name="T:TotalControl_EE_API.Controllers.RegisterController">
+            <summary>
+            Services to Create, Read, Update or Delete registers
+            of products
+            </summary>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.RegisterController.GetRegister">
+            <summary>
+            Get all registered
+            </summary>
+            <returns>All registers </returns>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.RegisterController.GetRegister(System.Int32)">
+            <summary>
+            Get an Register according to their Id
+            </summary>
+            <returns>Register data</returns>
+            <param name="id">Register ID</param>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.RegisterController.PostRegister(TotalControl_EE_API.Models.Dto.RegisterCreateDto)">
+            <summary>
+            Allows to Register a new Register of entries or exits
+            </summary>
+            <returns>The data of the added Register</returns>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.RegisterController.DeleteRegister(System.Int32)">
+            <summary>
+            Allows you to delete an Register
+            </summary>
+            <param name="id">Id of the Register to delete</param>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.RegisterController.UpdateRegister(System.Int32,TotalControl_EE_API.Models.Dto.RegisterUpdateDto)">
+            <summary>
+            Modify an Register
+            </summary>
+            <returns>No Content if modified successfully</returns>
+            <param name="id">Id of the Register to Modify</param>
+        </member>
+        <member name="T:TotalControl_EE_API.Controllers.SearchController">
+            <summary>
+            Service to Read registers
+            of products
+            </summary>
+        </member>
+        <member name="M:TotalControl_EE_API.Controllers.SearchController.Search(System.DateTime,System.DateTime,System.String,System.String)">
+            <summary>
+            Get an average Register according to their dateFrom and dateTo
+            </summary>
+            <returns>Register data</returns>
+            <param name="dateFrom">Register date</param>
+            <param name="dateTo">Register date</param>
+            <param name="descriptionFilter">Employee name or lastname</param>
+            <param name="BusinessLocation">Register location</param>
+        </member>
+        <member name="T:TotalControl_EE_API.Models.Employee">
+            <summary>
+            Allows you to register employees
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Employee.Id">
+            <summary>
+            Employee ID
+            </summary>
+            <value>The id is automatically incremented</value>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Employee.Name">
+            <summary>
+            Gets or sets the category name
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Employee.LastName">
+            <summary>
+            Gets or sets the last name of the category
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Employee.Gender">
+            <summary>
+            Gets or sets the gender of the category
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Employee.Status">
+            <summary>
+            Employee Status
+            </summary>
+            <value>The Status is set automatically</value>
+        </member>
+        <member name="T:TotalControl_EE_API.Models.Register">
+            <summary>
+            Allows you to register
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Register.IdRegister">
+            <summary>
+            Register IdRegister
+            </summary>
+            <value>The id is automatically incremented</value>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Register.IdEmployee">
+            <summary>
+            Gets or sets the IdEmployee registered
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Register.Employee">
+            <summary>
+            Sets the IdEmployee foreign key
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Register.Date">
+            <summary>
+            Gets or sets the Date
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Register.RegisterType">
+            <summary>
+            Gets or sets the RegisterType
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Register.BusinessLocation">
+            <summary>
+            Gets or sets the BusinessLocation
+            </summary>
+        </member>
+        <member name="P:TotalControl_EE_API.Models.Register.Status">
+            <summary>
+            Employee Status
+            </summary>
+            <value>The Status is set automatically</value>
+        </member>
+        <member name="T:TotalControlEEAPI.Migrations.newdatabaseupdate">
+            <inheritdoc />
+        </member>
+        <member name="M:TotalControlEEAPI.Migrations.newdatabaseupdate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TotalControlEEAPI.Migrations.newdatabaseupdate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TotalControlEEAPI.Migrations.newdatabaseupdate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

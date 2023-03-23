@@ -8,7 +8,10 @@ using TotalControl_EE_API.Repository.IRepository;
 // Declare the controller namespace
 namespace TotalControl_EE_API.Controllers
 {
-    // Base path of the controller and that it is an API controller
+    /// <summary>
+    /// Service to Read registers
+    /// of products
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class SearchController : ControllerBase
@@ -28,7 +31,15 @@ namespace TotalControl_EE_API.Controllers
             _response = new();
             _searchRepo = searchRepo;
         }
-        // Action method that is called when an HTTP GET request is made to the api/Search route
+        /// <summary>
+        /// Get an average Register according to their dateFrom and dateTo
+        /// </summary>
+        /// <returns>Register data</returns>
+        /// <param name="dateFrom">Register date</param>
+        /// <param name="dateTo">Register date</param>
+        /// <param name="descriptionFilter">Employee name or lastname</param>
+        /// <param name="BusinessLocation">Register location</param>
+        // GET: api/Register
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

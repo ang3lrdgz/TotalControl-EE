@@ -80,3 +80,4 @@ C:\Users\Angel\Desktop\TCEE\TotalControl-EE\TotalControl-EE_API\bin\Debug\net7.0
 C:\Users\Angel\Desktop\TCEE\TotalControl-EE\TotalControl-EE_API\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
 C:\Users\Angel\Desktop\TCEE\TotalControl-EE\TotalControl-EE_API\bin\Debug\net7.0\AutoMapper.dll
 C:\Users\Angel\Desktop\TCEE\TotalControl-EE\TotalControl-EE_API\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Angel\Desktop\TCEE\TotalControl-EE\TotalControl-EE_API\bin\Debug\net7.0\TotalControl-EE_API.xml
